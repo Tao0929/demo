@@ -1,0 +1,17 @@
+{
+  "name": "i18ndemo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "add-lang": "ts-node-esm scripts/addLanguage.ts",
+    "modify-lang": "ts-node-esm scripts/modifyLanguage.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "axios": "^1.8.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}

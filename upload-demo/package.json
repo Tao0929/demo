@@ -1,0 +1,24 @@
+{
+  "name": "upload-demo",
+  "version": "1.0.0",
+  "description": "基于Vue3和Element Plus的文件上传示例，包含分片上传、断点续传和秒传功能",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "server:dev": "nodemon server/index.js"
+  },
+  "dependencies": {
+    "vue": "^3.3.11",
+    "element-plus": "^2.4.4",
+    "spark-md5": "^3.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "vite": "^5.0.10",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3"
+  }
+}
