@@ -1,5 +1,11 @@
 <template>
   <div class="app-container">
+    <el-tabs v-model="type">
+      <el-tab-pane label="上传组件" name="upload"></el-tab-pane>
+      <el-tab-pane label="canvans画画组件" name="canvas"></el-tab-pane>
+      <el-tab-pane label="自定义按钮组件-保留@click事件" name="btns"></el-tab-pane>
+    </el-tabs>
+    <!-- 上传组件 -->
     <el-card class="upload-card" v-if="type == 'upload'">
       <template #header>
         <div class="card-header">
@@ -9,6 +15,7 @@
       <UploadFile @upload-success="handleUploadSuccess" />
       <FileList ref="fileListRef" />
     </el-card>
+    <!-- canvas 组件 -->
     <el-card class="upload-card" v-if="type == 'canvas'">
       <template #header>
         <div class="card-header">
@@ -17,22 +24,22 @@
       </template>
       <PrototypeVisualization />
     </el-card>
+    <!-- 自定义按钮组件 - 如何保留组件原有的事件 -->
     <el-card class="upload-card" v-if="type == 'btns'">
       <template #header>
         <div class="card-header">
           <h2>base-btns</h2>
         </div>
       </template>
+      <!-- 自定义按钮组件 - @click 事件 -->
       <BaseButton
         label="提交表单"
         type="primary"
         @click="handleSubmit"
       />
-      <BaseButton :loading="true" @click="() => {
-        console.log('点击了按钮')
-      }">
+      <BaseButton :loading="baseLoading" @click="baseLoadinghandler" label="loading按钮">
         <template #loading>
-          <span class="custom-loading">⏳ 加载中...</span>
+          <span class="custom-loading">⏳...</span>
         </template>
       </BaseButton>
     </el-card>
@@ -48,6 +55,16 @@ import PrototypeVisualization from './components/PrototypeVisualization.vue';
 import BaseButton from './components/BaseButton.vue';
 
 const fileListRef = ref(null);
+const baseLoading = ref(false)
+
+const baseLoadinghandler = () => {
+  baseLoading.value = true
+  setTimeout(() => {
+    baseLoading.value = false
+    console.log('点击了按钮')
+  }, 1000)
+  
+}
 const type = ref('btns');
 
 const handleUploadSuccess = () => {

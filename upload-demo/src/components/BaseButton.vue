@@ -1,5 +1,5 @@
 <template>
-    <button
+    <el-button
       :class="base-button"
       :disabled="disabled"
       @click="handleClick"
@@ -11,7 +11,7 @@
       <slot v-if="loading" name="loading">
         <span class="loading-icon">🌀</span>
       </slot>
-    </button>
+    </el-button>
   </template>
   
   <script setup>

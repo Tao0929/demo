@@ -36,7 +36,7 @@ const brickHeight = 60;  // 阳台高度
 const radius = 150;  // 飞行半径
 
 // 小鸟的初始位置
-const birdStartX = balconyX + 50;  // 小鸟起始X坐标
+const birdStartX = balconyX + 150;  // 小鸟起始X坐标
 const birdStartY = balconyY - 25;  // 小鸟起始Y坐标，贴近砖块表面
 
 /**
@@ -95,7 +95,7 @@ const drawBird = (x, y, direction) => {
   // 绘制身体 - 更扁平的椭圆
   ctx.fillStyle = '#4CAF50';
   ctx.beginPath();
-  ctx.ellipse(0, 0, 25, 12, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 0, 25, 12, 0, 0, Math.PI * 4);
   ctx.fill();
 
   // 绘制尾部 - 更扁平的形状
@@ -121,27 +121,31 @@ const drawBird = (x, y, direction) => {
   ctx.lineTo(0, 0);
   ctx.fill();
 
-  // 绘制头部 - 更小巧的形状
-  const headTilt = Math.sin(wingAngle * 0.3) * 0.1;
-  ctx.save();
-  ctx.rotate(headTilt);
-  ctx.fillStyle = '#4CAF50';
+  // 绘制眼睛 - 更有神的效果
+  ctx.fillStyle = 'white';
   ctx.beginPath();
-  ctx.arc(15, 0, 6, 0, Math.PI * 2);
+  ctx.arc(19, -2, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#1A237E';
+  ctx.beginPath();
+  ctx.arc(19.5, -2, 1.8, 0, Math.PI * 2);
+  ctx.fill();
+  // 眼睛高光
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  ctx.arc(20, -2.5, 1, 0, Math.PI * 2);
   ctx.fill();
 
-  // 绘制眼睛 - 更小的点状
-  ctx.fillStyle = 'black';
+  // 绘制喙 - 更自然的形状
+  const beakGradient = ctx.createLinearGradient(24, 0, 30, 0);
+  beakGradient.addColorStop(0, '#FFB300');
+  beakGradient.addColorStop(1, '#FF8F00');
+  ctx.fillStyle = beakGradient;
   ctx.beginPath();
-  ctx.arc(17, -2, 1, 0, Math.PI * 2);
-  ctx.fill();
-
-  // 绘制喙 - 更短小的三角形
-  ctx.fillStyle = '#FDD835';
-  ctx.beginPath();
-  ctx.moveTo(20, 0);
-  ctx.lineTo(24, 1);
-  ctx.lineTo(20, 2);
+  ctx.moveTo(24, -1.5);
+  ctx.quadraticCurveTo(27, -0.5, 30, 0);
+  ctx.quadraticCurveTo(27, 0.5, 24, 1.5);
+  ctx.quadraticCurveTo(23, 0, 24, -1.5);
   ctx.fill();
   ctx.restore();
 
@@ -211,23 +215,62 @@ const animate = () => {
   drawCloud(500, 100, 40);
   drawBalcony();
 
-  // 更新小鸟位置
+  // 更新小鸟位置和姿态
   angle += 0.02;
   wingAngle += 0.2;
 
-  // 计算小鸟的位置
-  const centerX = birdStartX + radius;
-  const centerY = birdStartY - radius / 2;
-  const x = centerX + Math.cos(angle) * radius;
-  const y = centerY + Math.sin(angle) * (radius / 2);
+  // 计算小鸟的自然飞行轨迹
+  const horizontalSpeed = 10; // 水平飞行速度
+  const verticalSpeed = 0.5; // 垂直上升速度
+  const maxHeight = 200; // 最大上升高度
+  
+  // 计算水平位置
+  const maxDistance = 400; // 最大水平飞行距离
+  const horizontalProgress = Math.min(angle * horizontalSpeed * 5, maxDistance);
+  const x = birdStartX + horizontalProgress;
+  
+  // 计算垂直位置，使用平滑的上升曲线
+  const heightProgress = Math.min(angle / 10, 1); // 限制上升进度
+  const smoothHeight = (1 - Math.cos(heightProgress * Math.PI)) / 2; // 平滑过渡
+  const y = birdStartY - smoothHeight * maxHeight;
+  
+  // 计算自然的倾斜角度
+  const tiltAngle = -Math.PI / 6 * smoothHeight; // 最大倾斜角度为30度
+  
+  // 绘制风的效果
+  const drawWind = (strength) => {
+    const windLines = 8; // 风线条数量
+    const maxLength = 180; // 最大线条长度
+    
+    ctx.strokeStyle = 'rgba(200, 200, 200, 0.3)';
+    ctx.lineWidth = 1;
+    
+    for (let i = 0; i < windLines; i++) {
+      const y = 100 + (i * 30);
+      const length = maxLength * (0.5 + Math.random() * 0.5);
+      const wave = Math.sin(Date.now() * 0.003 + i) * 10;
+      
+      ctx.beginPath();
+      ctx.moveTo(balconyX + brickWidth + 50, y + wave);
+      ctx.lineTo(balconyX + brickWidth + 50 - length, y);
+      ctx.stroke();
+    }
+  };
 
-  // 计算小鸟的朝向
-  const dx = -Math.sin(angle);
-  const dy = Math.cos(angle) * 0.5;
-  const direction = Math.atan2(dy, dx);
-
-  // 绘制小鸟
-  drawBird(x, y, direction);
+  // 绘制小鸟，添加自然的倾斜效果
+  ctx.save();
+  if (x == 600) {
+    drawWind()
+  }
+  ctx.translate(x, y);
+  ctx.rotate(tiltAngle);
+  
+  // 添加轻微的上下晃动
+  const bobAmount = Math.sin(wingAngle * 0.3) * 2;
+  ctx.translate(0, bobAmount);
+  
+  drawBird(0, 0, 0);
+  ctx.restore();
 
   // 继续动画循环
   animationFrameId = requestAnimationFrame(animate);
