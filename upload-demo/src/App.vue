@@ -5,7 +5,6 @@
       <el-tab-pane label="canvans画画组件" name="canvas"></el-tab-pane>
       <el-tab-pane label="自定义按钮组件-保留@click事件" name="btns"></el-tab-pane>
       <el-tab-pane label="PermissionAndRole" name="PermissionAndRole"></el-tab-pane>
-      <el-tab-pane label="PermissionAndRoleCard" name="PermissionAndRoleCard"></el-tab-pane>
     </el-tabs>
     <!-- 上传组件 -->
     <el-card class="upload-card" v-if="type == 'upload'">
