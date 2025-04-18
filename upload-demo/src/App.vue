@@ -4,6 +4,8 @@
       <el-tab-pane label="上传组件" name="upload"></el-tab-pane>
       <el-tab-pane label="canvans画画组件" name="canvas"></el-tab-pane>
       <el-tab-pane label="自定义按钮组件-保留@click事件" name="btns"></el-tab-pane>
+      <el-tab-pane label="PermissionAndRole" name="PermissionAndRole"></el-tab-pane>
+      <el-tab-pane label="PermissionAndRoleCard" name="PermissionAndRoleCard"></el-tab-pane>
     </el-tabs>
     <!-- 上传组件 -->
     <el-card class="upload-card" v-if="type == 'upload'">
@@ -43,7 +45,16 @@
         </template>
       </BaseButton>
     </el-card>
-
+    <!-- PremissionAndRole.vue -->
+    <el-card class="upload-card" v-if="type == 'PermissionAndRole'">
+      <template #header>
+        <div class="card-header">
+          <h2>PermissionAndRole</h2>
+        </div>
+      </template>
+      <!-- 自定义按钮组件 - @click 事件 -->
+      <PermissionAndRole :initialPermissions="initialPermissionsData" />
+    </el-card>
   </div>
 </template>
 
@@ -53,6 +64,9 @@ import UploadFile from './components/UploadFile.vue';
 import FileList from './components/FileList.vue';
 import PrototypeVisualization from './components/PrototypeVisualization.vue';
 import BaseButton from './components/BaseButton.vue';
+import PermissionAndRole from './components/PermissionAndRole.vue';
+
+const initialPermissionsData = ['1814231274299858946', '1809053516761776130', 'permission_1825732902106435586']
 
 const fileListRef = ref(null);
 const baseLoading = ref(false)
